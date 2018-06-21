@@ -16,7 +16,7 @@
 
 package com.example.android.sunshine.data;
 
-import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.LiveData;
 import android.util.Log;
 
 import com.example.android.sunshine.AppExecutors;
@@ -46,6 +46,15 @@ public class SunshineRepository {
         mWeatherNetworkDataSource = weatherNetworkDataSource;
         mExecutors = executors;
 
+        LiveData<WeatherEntry[]> networkData = mWeatherNetworkDataSource.getCurrentWeatherForecasts();
+        networkData.observeForever(newForecastsFromNetwork -> {
+
+            mExecutors.diskIO().execute(() -> {
+                // Insert our new weather data into Sunshine's database
+                mWeatherDao.bulkInsert(newForecastsFromNetwork);
+                Log.d(LOG_TAG, "New values inserted");
+            });
+        });
     }
 
     public synchronized static SunshineRepository getInstance(
@@ -73,7 +82,7 @@ public class SunshineRepository {
         if (mInitialized) return;
         mInitialized = true;
 
-        // TODO Finish this method when instructed
+        startFetchWeatherService();
     }
 
     /**
@@ -102,7 +111,7 @@ public class SunshineRepository {
      */
 
     private void startFetchWeatherService() {
-        // TODO Finish this method when instructed
+        mWeatherNetworkDataSource.startFetchWeatherService();
     }
 
 }
