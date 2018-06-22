@@ -81,10 +81,14 @@ public class SunshineRepository {
 
         // Only perform initialization once per app lifetime. If initialization has already been
         // performed, we have nothing to do in this method.
-        if (mInitialized) return;
-        mInitialized = true;
+//        if (mInitialized) return;
+//        mInitialized = true;
 
-        startFetchWeatherService();
+        mExecutors.diskIO().execute(() -> {
+            if (!isFetchNeeded()) return;
+
+            startFetchWeatherService();
+        });
     }
 
     /**
@@ -104,8 +108,9 @@ public class SunshineRepository {
      * @return Whether a fetch is needed
      */
     private boolean isFetchNeeded() {
-        // TODO Finish this method when instructed
-        return true;
+        int requiredDaysOfForecast = 14;
+        int futureWeatherCount = mWeatherDao.countAllFutureWeather();
+        return futureWeatherCount < requiredDaysOfForecast;
     }
 
     /**
