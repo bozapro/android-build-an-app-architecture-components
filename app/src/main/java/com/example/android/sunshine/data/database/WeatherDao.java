@@ -20,7 +20,7 @@ public interface WeatherDao {
     @Query("SELECT * FROM weather WHERE date = :date")
     LiveData<WeatherEntry> getWeatherByDate(Date date);
 
-    @Query("SELECT count(*) FROM weather WHERE date between date('now') and date('now','+14 day');")
+    @Query("SELECT count(*) FROM weather WHERE date(date,'unixepoch', 'localtime') between date('now') and date('now','+14 day')")
     int countAllFutureWeather();
 
 //    @Query("DELETE ")

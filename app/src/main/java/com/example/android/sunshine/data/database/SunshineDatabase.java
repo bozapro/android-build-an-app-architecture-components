@@ -8,7 +8,7 @@ import android.content.Context;
 
 
 @Database(entities = {WeatherEntry.class}, version = 1)
-@TypeConverters(DateConverter.class)
+@TypeConverters(LongDateConverter.class)
 public abstract class SunshineDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "weather";
