@@ -15,6 +15,8 @@
  */
 package com.example.android.sunshine.ui.list;
 
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,21 +26,27 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.android.sunshine.R;
+import com.example.android.sunshine.data.database.WeatherEntry;
 import com.example.android.sunshine.ui.detail.DetailActivity;
+import com.example.android.sunshine.ui.detail.DetailActivityViewModel;
+import com.example.android.sunshine.ui.detail.DetailViewModelFactory;
+import com.example.android.sunshine.utilities.InjectorUtils;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
  * Displays a list of the next 14 days of forecasts
  */
 public class MainActivity extends AppCompatActivity implements
-        ForecastAdapter.ForecastAdapterOnItemClickHandler {
+        ForecastAdapter.ForecastAdapterOnItemClickHandler, LifecycleOwner {
 
     private ForecastAdapter mForecastAdapter;
     private RecyclerView mRecyclerView;
     private int mPosition = RecyclerView.NO_POSITION;
     private ProgressBar mLoadingIndicator;
+    private MainActivityViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +110,13 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(mForecastAdapter);
         showLoading();
 
+
+        final MainViewModelFactory factory = InjectorUtils.provideMainActivityViewModelFactory(this);
+        mViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
+        mViewModel.getForecasts().observe(this, forecasts -> {
+            if (forecasts != null)
+                bindWeatherToUI(forecasts);
+        });
     }
 
     /**
@@ -143,5 +158,17 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setVisibility(View.INVISIBLE);
         // Finally, show the loading indicator
         mLoadingIndicator.setVisibility(View.VISIBLE);
+    }
+
+    private void bindWeatherToUI(List<WeatherEntry> forecasts) {
+        mForecastAdapter.swapForecast(forecasts);
+
+        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+        mRecyclerView.smoothScrollToPosition(mPosition);
+
+        // Show the weather list or the loading screen based on whether the forecast data exists
+        // and is loaded
+        if (forecasts != null && forecasts.size() != 0) showWeatherDataView();
+        else showLoading();
     }
 }

@@ -32,7 +32,7 @@ public class DetailActivityViewModel extends ViewModel {
     // Weather forecast the user is looking at
     private LiveData<WeatherEntry> mWeather;
 
-    public DetailActivityViewModel(SunshineRepository repository, Date date) {
+    DetailActivityViewModel(SunshineRepository repository, Date date) {
         mWeather = repository.getWeatherByDate(date);
     }
 
@@ -40,8 +40,4 @@ public class DetailActivityViewModel extends ViewModel {
         return mWeather;
     }
 
-    //removed as mWeather is no longer MutableLiveData!!
-//    public void setWeather(WeatherEntry weatherEntry) {
-//        mWeather.postValue(weatherEntry);
-//    }
 }

@@ -81,6 +81,7 @@ final class NetworkUtils {
      */
     static URL getUrl() {
         String locationQuery = "Mountain View, CA";
+//        String locationQuery = "Zurich, Switzerland";
         return buildUrlWithLocationQuery(locationQuery);
     }
 

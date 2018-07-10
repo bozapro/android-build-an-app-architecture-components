@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import java.util.Date;
+import java.util.List;
 
 @Dao
 public interface WeatherDao {
@@ -26,4 +27,7 @@ public interface WeatherDao {
     //@Query("DELETE FROM weather WHERE date(date,'unixepoch', 'localtime') < :date")
     @Query("DELETE FROM weather WHERE date < :date")
     void deleteDataOlderThan(Date date);
+
+    @Query("SELECT * FROM weather WHERE date >= :date")
+    LiveData<List<WeatherEntry>> getWetherForecastsAfter(Date date);
 }
