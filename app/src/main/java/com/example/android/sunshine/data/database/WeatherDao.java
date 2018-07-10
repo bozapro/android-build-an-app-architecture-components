@@ -23,6 +23,7 @@ public interface WeatherDao {
     @Query("SELECT count(*) FROM weather WHERE date(date,'unixepoch', 'localtime') between date('now') and date('now','+14 day')")
     int countAllFutureWeather();
 
-//    @Query("DELETE ")
-//    void deleteOldData();
+    //@Query("DELETE FROM weather WHERE date(date,'unixepoch', 'localtime') < :date")
+    @Query("DELETE FROM weather WHERE date < :date")
+    void deleteDataOlderThan(Date date);
 }

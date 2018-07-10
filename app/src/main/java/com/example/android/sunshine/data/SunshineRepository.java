@@ -23,6 +23,7 @@ import com.example.android.sunshine.AppExecutors;
 import com.example.android.sunshine.data.database.WeatherDao;
 import com.example.android.sunshine.data.database.WeatherEntry;
 import com.example.android.sunshine.data.network.WeatherNetworkDataSource;
+import com.example.android.sunshine.utilities.SunshineDateUtils;
 
 import java.util.Date;
 
@@ -52,6 +53,7 @@ public class SunshineRepository {
         networkData.observeForever(newForecastsFromNetwork -> {
 
             mExecutors.diskIO().execute(() -> {
+                deleteOldData();
                 // Insert our new weather data into Sunshine's database
                 mWeatherDao.bulkInsert(newForecastsFromNetwork);
                 Log.d(LOG_TAG, "New values inserted");
@@ -99,7 +101,8 @@ public class SunshineRepository {
      * Deletes old weather data because we don't need to keep multiple days' data
      */
     private void deleteOldData() {
-        // TODO Finish this method when instructed
+        Date today = SunshineDateUtils.getNormalizedUtcDateForToday();
+        mWeatherDao.deleteDataOlderThan(today);
     }
 
     /**
