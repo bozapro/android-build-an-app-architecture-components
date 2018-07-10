@@ -85,8 +85,10 @@ public class SunshineRepository {
 
         // Only perform initialization once per app lifetime. If initialization has already been
         // performed, we have nothing to do in this method.
-//        if (mInitialized) return;
-//        mInitialized = true;
+        if (mInitialized) return;
+        mInitialized = true;
+
+        mWeatherNetworkDataSource.scheduleRecurringFetchWeatherSync();
 
         mExecutors.diskIO().execute(() -> {
             if (!isFetchNeeded()) return;
