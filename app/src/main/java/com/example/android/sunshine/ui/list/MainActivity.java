@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.android.sunshine.R;
+import com.example.android.sunshine.data.database.ListViewWeatherEntry;
 import com.example.android.sunshine.data.database.WeatherEntry;
 import com.example.android.sunshine.ui.detail.DetailActivity;
 import com.example.android.sunshine.ui.detail.DetailActivityViewModel;
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements
         mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
-    private void bindWeatherToUI(List<WeatherEntry> forecasts) {
+    private void bindWeatherToUI(List<ListViewWeatherEntry> forecasts) {
         mForecastAdapter.swapForecast(forecasts);
 
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
