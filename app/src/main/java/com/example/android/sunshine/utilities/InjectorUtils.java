@@ -28,7 +28,10 @@ import com.example.android.sunshine.ui.list.MainViewModelFactory;
 import java.util.Date;
 
 /**
- * Provides static methods to inject the various classes needed for Sunshine
+ * Provides static methods to inject the various classes needed for Sunshine.
+ *
+ * Service locator pattern is used here: https://en.wikipedia.org/wiki/Service_locator_pattern.
+ *
  */
 public class InjectorUtils {
 
